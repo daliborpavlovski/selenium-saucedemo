@@ -1,6 +1,5 @@
 package com.saucedemo.utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -34,20 +33,17 @@ public class DriverFactory {
 
         switch (browser.toLowerCase()) {
             case "firefox" -> {
-                WebDriverManager.firefoxdriver().setup();
                 FirefoxOptions opts = new FirefoxOptions();
                 if (headless) opts.addArguments("--headless");
                 driver = new FirefoxDriver(opts);
             }
             case "edge" -> {
-                WebDriverManager.edgedriver().setup();
                 EdgeOptions opts = new EdgeOptions();
                 if (headless) opts.addArguments("--headless");
                 driver = new EdgeDriver(opts);
             }
             default -> {
-                // Default: Chrome
-                WebDriverManager.chromedriver().setup();
+                // Selenium Manager (built into Selenium 4.6+) resolves ChromeDriver automatically.
                 ChromeOptions opts = new ChromeOptions();
                 if (headless) {
                     opts.addArguments("--headless=new");
@@ -60,7 +56,9 @@ public class DriverFactory {
             }
         }
 
-        driver.manage().window().maximize();
+        if (!headless) {
+            driver.manage().window().maximize();
+        }
         return driver;
     }
 

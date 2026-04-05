@@ -56,7 +56,9 @@ public class DriverFactory {
             }
         }
 
-        driver.manage().window().maximize();
+        if (!headless) {
+            driver.manage().window().maximize();
+        }
         return driver;
     }
 

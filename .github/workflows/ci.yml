@@ -12,7 +12,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -29,7 +29,7 @@ jobs:
         uses: browser-actions/setup-chrome@v1
 
       - name: Run tests
-        run: mvn test
+        run: mvn test -Dwebdriver.chrome.driver=$(which chromedriver) -B --no-transfer-progress
 
       - name: Rename report to index.html
         if: always()

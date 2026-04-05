@@ -54,6 +54,8 @@ public class DriverFactory {
                     opts.addArguments("--window-size=1920,1080");
                 }
                 opts.addArguments("--disable-notifications");
+                opts.addArguments("--no-sandbox");
+                opts.addArguments("--disable-dev-shm-usage");
                 driver = new ChromeDriver(opts);
             }
         }

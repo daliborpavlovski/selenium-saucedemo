@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run tests
+        run: mvn test
+
+      - name: Rename report to index.html
+        if: always()
+        run: |
+          report=$(ls test-output/extent-reports/report_*.html 2>/dev/null | head -1)
+          [ -n "$report" ] && cp "$report" test-output/extent-reports/index.html
+
+      - name: Publish report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: test-output/extent-reports
+          publish_branch: gh-pages
